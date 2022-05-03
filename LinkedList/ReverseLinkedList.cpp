@@ -101,11 +101,8 @@ Node *reverseListRecursive(Node *curr)
 Node *reverseListRecursive_simple(Node *prev, Node *curr)
 {
     // recursion break condition
-    if (curr == NULL || curr->next == NULL)
-    {
-        curr->next = prev;
-        return curr;
-    }
+    if (curr == NULL)
+        return prev;
 
     Node *headPtr = reverseListRecursive_simple(curr, curr->next);
     curr->next = prev;
@@ -152,6 +149,33 @@ void rotateListByRight(Node **headPtr, int k)
     Node *head = *headPtr;
 }
 
+Node *reverseList_inBlocks(Node *head, int size)
+{
+    if (!head)
+        return NULL;
+
+    Node *curr = head;
+    Node *prev = NULL;
+    Node *next = NULL;
+
+    int count = 0;
+
+    while (curr != NULL && count < size)
+    {
+        count++;
+
+        next = curr->next;
+        curr->next = prev;
+
+        prev = curr;
+        curr = next;
+    }
+
+    head->next = reverseList_inBlocks(curr, size);
+
+    return prev;
+}
+
 // Driver Code
 int main()
 {
@@ -167,10 +191,12 @@ int main()
     printList(head);
 
     std::cout << "Linked List after reversal \n";
-    head = reverseListRecursive_simple(NULL, head);
-    // head = reverseListRecursive(head);
-    // head = reverseListIterative(head);
-    // head = reverseListUsingStack(head);
+    // head = reverseListRecursive_simple(NULL, head);
+    std::cout << "Block reversal \n";
+    head = reverseList_inBlocks(head, 3);
+    //   head = reverseListRecursive(head);
+    //   head = reverseListIterative(head);
+    //   head = reverseListUsingStack(head);
     printList(head);
 
     std::cout << "Linked List after rotation by 4 \n";
